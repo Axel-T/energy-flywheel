@@ -1,0 +1,47 @@
+services:
+
+  app:
+    image: heartexlabs/label-studio:1.14.0
+    container_name: label-studio
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DJANGO_DB=default
+      - POSTGRE_HOST=postgres
+      - POSTGRE_PORT=5432
+      - POSTGRE_USER=labelstudio
+      - POSTGRE_PASSWORD=${LS_DB_PASSWORD}
+      - POSTGRE_NAME=labelstudio
+      - LABEL_STUDIO_HOST=http://annotation-server-ip:8080
+      - SECRET_KEY=${LS_SECRET_KEY}
+      - SSRF_PROTECTION_ENABLED=true
+    volumes:
+      - ./label-studio-data:/label-studio/data
+    networks:
+      - ls-network
+
+  postgres:
+    image: postgres:16
+    container_name: ls-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=labelstudio
+      - POSTGRES_PASSWORD=${LS_DB_PASSWORD}
+      - POSTGRES_DB=labelstudio
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U labelstudio"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ls-network
+
+networks:
+  ls-network:
+    driver: bridge

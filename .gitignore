@@ -1,0 +1,41 @@
+# Environment files — never commit secrets
+.env
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# Model weights and adapters — too large for git, store in MinIO
+*.gguf
+*.safetensors
+lora_adapter/
+merged_model/
+*.tar.gz
+
+# Training artefacts
+output/
+checkpoints/
+runs/
+
+# InfluxDB / Docker volumes
+influxdb-data/
+postgres-data/
+label-studio-data/
+nodered-data/
+mosquitto/data/
+mosquitto/log/
+
+# macOS
+.DS_Store
+
+# Editor
+.idea/
+.vscode/
+*.swp

@@ -1,0 +1,7 @@
+[
+  {
+    "context": "{\n  \"generated_at\": \"2024-06-15T14:32:00Z\",\n  \"solarpv\": {\n    \"current_power_w\": 3840,\n    \"yield_today_kwh\": 18.4,\n    \"yield_7d_avg_kwh\": 21.2,\n    \"yield_30d_avg_kwh\": 19.8\n  },\n  \"solarthermie\": {\n    \"collector_temp_c\": 78.3,\n    \"buffer_top_c\": 67.1,\n    \"buffer_mid_c\": 54.8,\n    \"buffer_bottom_c\": 41.2,\n    \"buffer_7d_high_c\": 72.4,\n    \"buffer_7d_low_c\": 38.6\n  },\n  \"heizung\": {\n    \"boiler_temp_c\": 68.4,\n    \"pellets_today_kg\": 1.2,\n    \"pellets_7d_avg_kg\": 1.8,\n    \"pellets_30d_avg_kg\": 4.1\n  },\n  \"weather\": {\n    \"outdoor_temp_c\": 22.4\n  }\n}",
+    "question": "The thermal buffer is at 67°C at 14:00. Should I run the dishwasher now or wait?",
+    "answer": "Yes, run the dishwasher now. The buffer top is at 67°C, well above the minimum usable threshold of around 55°C for domestic hot water. PV is currently producing 3.84 kW, which covers a typical dishwasher load of 1.8–2.2 kW entirely from solar. The collector temperature of 78.3°C means the buffer will continue to charge through the afternoon. Waiting until evening would mean drawing from the grid once solar production drops."
+  }
+]

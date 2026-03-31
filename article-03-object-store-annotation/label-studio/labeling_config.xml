@@ -1,0 +1,74 @@
+<View>
+  <Style>
+    .context-box {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      font-family: monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+    }
+    .question-box {
+      background: #e8f4f8;
+      border-left: 4px solid #2196f3;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      border-radius: 0 6px 6px 0;
+    }
+    .answer-box {
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+    }
+  </Style>
+
+  <!-- Sensor context snapshot at time of query -->
+  <View className="context-box">
+    <Header value="Sensor context (at time of query)"/>
+    <Text name="context" value="$context"/>
+  </View>
+
+  <!-- User question -->
+  <View className="question-box">
+    <Header value="Question"/>
+    <Text name="question" value="$question"/>
+  </View>
+
+  <!-- Model answer under review -->
+  <View className="answer-box">
+    <Header value="Model answer"/>
+    <Text name="answer" value="$answer"/>
+  </View>
+
+  <!-- Verdict -->
+  <Header value="Is this answer correct?"/>
+  <Choices name="verdict" toName="question"
+    choice="single" showInLine="true">
+    <Choice value="Correct"           background="#28a745"/>
+    <Choice value="Partially correct" background="#ffc107"/>
+    <Choice value="Wrong"             background="#dc3545"/>
+  </Choices>
+
+  <!-- Free-text correction — required if Wrong or Partially correct -->
+  <Header value="Correction (required if Wrong or Partially correct)"/>
+  <TextArea name="correction" toName="question"
+    placeholder="Write the correct answer here..."
+    rows="4"
+    editable="true"/>
+
+  <!-- Optional failure categorisation -->
+  <Header value="Failure reason (optional)"/>
+  <Choices name="failure_reason" toName="question"
+    choice="single" showInLine="true">
+    <Choice value="Missing context"/>
+    <Choice value="Misread sensor value"/>
+    <Choice value="Wrong seasonal reasoning"/>
+    <Choice value="Calculation error"/>
+    <Choice value="Other"/>
+  </Choices>
+
+</View>

@@ -1,0 +1,100 @@
+[
+  {
+    "id": "http-context-in",
+    "type": "http in",
+    "z": "energy-flywheel",
+    "name": "Context request",
+    "url": "/api/context",
+    "method": "POST",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 120,
+    "y": 100,
+    "wires": [["parallel-split"]]
+  },
+  {
+    "id": "parallel-split",
+    "type": "function",
+    "z": "energy-flywheel",
+    "name": "Trigger parallel queries",
+    "func": "// Clone message for each subsystem query\nconst pv      = RED.util.cloneMessage(msg);\nconst thermal = RED.util.cloneMessage(msg);\nconst heating  = RED.util.cloneMessage(msg);\npv.subsystem      = 'solarpv';\nthermal.subsystem = 'solarthermie';\nheating.subsystem = 'heizung';\nreturn [pv, thermal, heating];",
+    "outputs": 3,
+    "x": 320,
+    "y": 100,
+    "wires": [["query-pv"], ["query-thermal"], ["query-heating"]]
+  },
+  {
+    "id": "query-pv",
+    "type": "influxdb in",
+    "z": "energy-flywheel",
+    "influxdb": "influxdb-v2-config",
+    "name": "Query PV",
+    "org": "homelab",
+    "query": "// Paste contents of flux/context_solarpv.flux here",
+    "x": 520,
+    "y": 60,
+    "wires": [["join-results"]]
+  },
+  {
+    "id": "query-thermal",
+    "type": "influxdb in",
+    "z": "energy-flywheel",
+    "influxdb": "influxdb-v2-config",
+    "name": "Query solar thermal",
+    "org": "homelab",
+    "query": "// Paste contents of flux/context_solarthermie.flux here",
+    "x": 520,
+    "y": 100,
+    "wires": [["join-results"]]
+  },
+  {
+    "id": "query-heating",
+    "type": "influxdb in",
+    "z": "energy-flywheel",
+    "influxdb": "influxdb-v2-config",
+    "name": "Query heating",
+    "org": "homelab",
+    "query": "// Paste contents of flux/context_heizung.flux here",
+    "x": 520,
+    "y": 140,
+    "wires": [["join-results"]]
+  },
+  {
+    "id": "join-results",
+    "type": "join",
+    "z": "energy-flywheel",
+    "name": "Join all subsystems",
+    "mode": "custom",
+    "build": "object",
+    "property": "subsystem",
+    "propertyType": "msg",
+    "key": "topic",
+    "joiningKey": "topic",
+    "count": 3,
+    "x": 700,
+    "y": 100,
+    "wires": [["assemble-context"]]
+  },
+  {
+    "id": "assemble-context",
+    "type": "function",
+    "z": "energy-flywheel",
+    "name": "Assemble context block",
+    "func": "const parts = msg.payload;\n\nconst context = {\n  generated_at: new Date().toISOString(),\n  solarpv:      parts.solarpv      || {},\n  solarthermie: parts.solarthermie || {},\n  heizung:      parts.heizung      || {}\n};\n\nmsg.payload = context;\nreturn msg;",
+    "outputs": 1,
+    "x": 880,
+    "y": 100,
+    "wires": [["http-context-out"]]
+  },
+  {
+    "id": "http-context-out",
+    "type": "http response",
+    "z": "energy-flywheel",
+    "name": "Return context JSON",
+    "statusCode": "200",
+    "headers": { "Content-Type": "application/json" },
+    "x": 1060,
+    "y": 100,
+    "wires": []
+  }
+]

@@ -1,0 +1,57 @@
+[
+  {
+    "id": "feedback-webhook-in",
+    "type": "http in",
+    "z": "energy-flywheel-feedback",
+    "name": "OpenWebUI feedback",
+    "url": "/api/feedback",
+    "method": "POST",
+    "x": 120,
+    "y": 100,
+    "wires": [["parse-feedback"]]
+  },
+  {
+    "id": "parse-feedback",
+    "type": "function",
+    "z": "energy-flywheel-feedback",
+    "name": "Build annotation task",
+    "func": "const body = msg.payload;\n\n// Build a Label Studio task from the feedback payload.\n// OpenWebUI sends: rating (1=up, -1=down), message, response, comment.\nconst task = [{\n  context:  body.context  || '',\n  question: body.message  || '',\n  answer:   body.response || '',\n  rating:   body.rating,\n  comment:  body.comment  || '',\n  source:   'user_feedback',\n  timestamp: new Date().toISOString()\n}];\n\n// Skip thumbs-up with no correction — positive signal but no annotation needed.\nif (body.rating === 1 && !body.comment) {\n  msg.skip = true;\n  msg.payload = { status: 'ok', action: 'skipped' };\n  return [null, msg];  // output 2: ack without queuing\n}\n\nmsg.task     = task;\nmsg.filename = 'feedback_' + Date.now() + '.json';\nmsg.payload  = { status: 'ok', action: 'queued' };\nreturn [msg, null];  // output 1: queue for upload",
+    "outputs": 2,
+    "x": 320,
+    "y": 100,
+    "wires": [["write-task-file"], ["feedback-ack"]]
+  },
+  {
+    "id": "write-task-file",
+    "type": "function",
+    "z": "energy-flywheel-feedback",
+    "name": "Write task to /tmp",
+    "func": "const fs = global.get('fs') || require('fs');\nconst path = '/tmp/' + msg.filename;\nfs.writeFileSync(path, JSON.stringify(msg.task, null, 2));\nmsg.tmpPath = path;\nreturn msg;",
+    "x": 520,
+    "y": 80,
+    "wires": [["upload-to-minio"]]
+  },
+  {
+    "id": "upload-to-minio",
+    "type": "exec",
+    "z": "energy-flywheel-feedback",
+    "name": "mc cp to MinIO",
+    "command": "mc cp",
+    "addpay": false,
+    "append": "",
+    "useSpawn": false,
+    "x": 720,
+    "y": 80,
+    "wires": [["feedback-ack"], [], []]
+  },
+  {
+    "id": "feedback-ack",
+    "type": "http response",
+    "z": "energy-flywheel-feedback",
+    "name": "Acknowledge feedback",
+    "statusCode": "200",
+    "x": 920,
+    "y": 100,
+    "wires": []
+  }
+]

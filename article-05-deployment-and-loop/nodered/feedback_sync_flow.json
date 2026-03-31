@@ -1,0 +1,51 @@
+[
+  {
+    "id": "feedback-sync-timer",
+    "type": "inject",
+    "z": "energy-flywheel-feedback",
+    "name": "Every hour",
+    "repeat": "3600",
+    "crontab": "",
+    "once": false,
+    "x": 120,
+    "y": 200,
+    "wires": [["mirror-feedback-bucket"]]
+  },
+  {
+    "id": "mirror-feedback-bucket",
+    "type": "exec",
+    "z": "energy-flywheel-feedback",
+    "name": "Mirror MinIO feedback → /tmp",
+    "command": "mc mirror --overwrite local/exports/feedback/ /tmp/ls-feedback-staging/",
+    "addpay": false,
+    "x": 340,
+    "y": 200,
+    "wires": [["trigger-ls-sync"], [], []]
+  },
+  {
+    "id": "trigger-ls-sync",
+    "type": "http request",
+    "z": "energy-flywheel-feedback",
+    "name": "Sync Label Studio source storage",
+    "method": "POST",
+    "ret": "txt",
+    "url": "http://annotation-server-ip:8080/api/storages/1/sync",
+    "tls": "",
+    "headers": {
+      "Authorization": "Token replace-with-your-label-studio-api-token"
+    },
+    "x": 580,
+    "y": 200,
+    "wires": [["log-sync-result"]]
+  },
+  {
+    "id": "log-sync-result",
+    "type": "debug",
+    "z": "energy-flywheel-feedback",
+    "name": "Log sync result",
+    "active": true,
+    "x": 800,
+    "y": 200,
+    "wires": []
+  }
+]

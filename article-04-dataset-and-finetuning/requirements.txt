@@ -1,0 +1,19 @@
+# Cloud GPU environment dependencies for Article 4 fine-tuning
+# Install on the rented GPU instance before running train_energy_adapter.py
+#
+# Usage:
+#   pip install -r requirements.txt
+
+# Unsloth — efficient QLoRA fine-tuning
+unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git
+
+# HuggingFace ecosystem
+transformers==4.46.3
+datasets==2.21.0
+accelerate==1.1.1
+peft==0.13.2
+bitsandbytes==0.44.1
+trl==0.12.1
+
+# InfluxDB client for the QA generation script
+influxdb-client==1.44.0

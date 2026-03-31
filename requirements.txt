@@ -1,0 +1,17 @@
+# Common Python dependencies used across the series
+# Each article folder has its own requirements.txt for environment-specific deps
+
+# InfluxDB client (Articles 2 and 4)
+influxdb-client==1.44.0
+
+# MinIO client SDK (Articles 3, 4, 5)
+minio==7.2.9
+
+# Label Studio SDK (Article 4 export script)
+label-studio-sdk==1.0.8
+
+# HTTP requests
+requests==2.32.3
+
+# Dataset handling (Article 4)
+datasets==2.21.0
