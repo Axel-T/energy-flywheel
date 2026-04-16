@@ -52,9 +52,9 @@ Ollama · OpenWebUI
 
 | Article | Folder | What it builds |
 |---|---|---|
-| [Article 1 — Concept and architecture]([https://medium.com/](https://medium.com/@athobaben_56166/building-an-ai-data-flywheel-for-home-energy-management-9b7c1a0f63ae)) | `article-01-concept-and-architecture/` | Architecture overview, hardware BOM, software inventory |
-| [Article 2 — Metrics server]([https://medium.com/](https://medium.com/@athobaben_56166/building-an-ai-data-flywheel-for-home-energy-management-49d2ed62acb2)) | `article-02-metrics-server/` | InfluxDB, Node-RED, Mosquitto, Flux queries, context API |
-| [Article 3 — Object store and annotation]([https://medium.com/](https://medium.com/@athobaben_56166/building-an-ai-data-flywheel-for-home-energy-management-ae517b63ac8b)) | `article-03-object-store-annotation/` | MinIO, Label Studio, annotation project setup |
+| [Article 1 — Concept and architecture](https://medium.com/@athobaben_56166/building-an-ai-data-flywheel-for-home-energy-management-9b7c1a0f63ae) | `article-01-concept-and-architecture/` | Architecture overview, hardware BOM, software inventory |
+| [Article 2 — Metrics server](https://medium.com/@athobaben_56166/building-an-ai-data-flywheel-for-home-energy-management-49d2ed62acb2) | `article-02-metrics-server/` | InfluxDB, Node-RED, Mosquitto, Flux queries, context API |
+| [Article 3 — Object store and annotation](https://medium.com/@athobaben_56166/building-an-ai-data-flywheel-for-home-energy-management-ae517b63ac8b) | `article-03-object-store-annotation/` | MinIO, Label Studio, annotation project setup |
 | [Article 4 — Dataset generation and fine-tuning](https://medium.com/) | `article-04-dataset-and-finetuning/` | Synthetic QA generation, export, QLoRA training |
 | [Article 5 — Deployment and feedback loop](https://medium.com/) | `article-05-deployment-and-loop/` | PEFT merge, Ollama, OpenWebUI, feedback webhook |
 
